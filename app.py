@@ -15,6 +15,9 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+# Create an events array for use with calendar
+events = []
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -75,7 +78,10 @@ def login():
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
 
-        # Redirect tp home page
+        # Close database
+        con.close()
+
+        # Redirect to home page
         return render_template("index.html")
     
     # User reached route via GET (as by clicking a link or via redirect)
@@ -156,3 +162,39 @@ def register():
     else:  
         # Load registration page 
         return render_template("register.html")
+
+@app.route("/calendar", methods=["POST", "GET"])
+@login_required
+def calendar():
+    
+    # Get current user
+    user = session["user_id"]
+
+    # Access Move Forward database
+    try:
+        con = sqlite3.connect('moveforward.db')
+        cursor = con.cursor()
+    except sqlite3.Error as error:
+            print("Error while connecting to sqlite", error)
+
+    # Read database
+    cursor.execute(
+        "SELECT * FROM workouts WHERE id = ?", (user,)
+    )
+    row = cursor.fetchone()
+
+    while row:
+        events_dict = {
+                'title' : row[1],
+                'start' : row[3],
+                'extendedProps' : {
+                    'description' : row[2]
+                }
+            }
+        events.append(events_dict)
+        row = cursor.fetchone()
+
+    for event in events:
+        print(event)
+
+    return render_template("calendar.html", events=events)
