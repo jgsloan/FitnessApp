@@ -5,24 +5,94 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 <script>
+  
     document.addEventListener('DOMContentLoaded', function() {
       const calendarEl = document.getElementById('calendar')
       const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth' 
-      });
-      calendar.render();
+        initialView: 'dayGridMonth',
+
+        customButtons: {
+          myCustomButton: {
+            text: '+ Add Workout',
+            click: function(jsEvent) {
+              $("#myModal").modal("show");
+            }
+            }
+          },
+
+        headerToolbar: {
+          left: 'myCustomButton today prev,next',
+          center: 'title',
+          end: 'dayGridMonth,dayGridWeek,dayGridDay'
+        },
+
+        events: [
+        {% for event in events %}
+        {
+          title: '{{event.title}}',
+          start: '{{event.start}}',
+          description: '{{event.extendedProps.description}}'   
+        },
+        {% endfor %}
+        ],
+ 
+        eventMouseEnter: function(info){
+          $(info.el).tooltip({
+          title: 'Workout: ' + info.event.title + '\n' + 'Description: ' + info.event.extendedProps.description,
+          placement: 'bottom'
+          });
+        },
+
+        eventClick: function(info){
+          alert('Workout: ' + info.event.title + '\n' + 'Description: ' + info.event.extendedProps.description);
+        }
+
     });
+      calendar.render();
+  });
+
   </script>
+
+
 
 {% endblock %}
 
 {% block title %}Calendar{% endblock %}
 
-
 {% block main %}
 
 <div class="container">
     <div id="calendar"></div>  
+</div>
+
+<div class="container mt-5">
+<div class="modal fade" id="myModal" tabindex="-1"> 
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content mx-4 my-4">
+      <div class="modal-header" style="background-color: blue; color: white;">
+          <h5 class="modal-title">Add a Workout</h5>
+          <button class="btn-close" data-bs-dismiss='modal'></button>
+      </div>
+      <div class="body mx-3 my-3">
+        <form action="add" method="post">
+          <div class="mb-3">
+            <label for="" class="form-label">Workout Title</label>
+            <input type="text" class="form-control" placeholder="e.g. AMRAP20, Annie etc" name="title">
+          </div>
+          <div class="mb-3">
+            <label for="" class="form-label">Workout Description</label>
+            <textarea name="description" cols="30" rows="10" class="form-control"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Workout Date</label>
+            <input type="date" class="form-control" name="workoutDate">
+          </div>
+          <button type="submit" class="btn btn-primary mb-3">Add Workout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 </div>
 
 {% endblock %}

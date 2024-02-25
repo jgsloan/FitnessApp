@@ -1,7 +1,7 @@
 import os
 import sqlite3
 
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, json
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -31,7 +31,7 @@ def after_request(response):
 @login_required
 def index():
     """Welcome Screen"""
-    return render_template("index.html") 
+    return render_template("index.html", events=events) 
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -183,6 +183,10 @@ def calendar():
     )
     row = cursor.fetchone()
 
+    #empty array
+    events.clear()
+
+    # Populate array with workouts from workouts table in MF database.
     while row:
         events_dict = {
                 'title' : row[1],
@@ -194,7 +198,47 @@ def calendar():
         events.append(events_dict)
         row = cursor.fetchone()
 
-    for event in events:
-        print(event)
-
     return render_template("calendar.html", events=events)
+
+
+@app.route("/add", methods=["POST",])
+@login_required
+def add():
+    
+    error = None
+    user = session["user_id"]
+    
+    # Check if form submitted via post
+    if request.method == 'POST':
+        
+         # add form entries into variables
+        print(user)
+        title = request.form.get("title")
+        print(title)
+        description = request.form.get("description")
+        print(description)
+        date = request.form.get("workoutDate")
+        print(date)   
+        
+        # Connect to database
+        try:
+            con = sqlite3.connect('moveforward.db')
+            cursor = con.cursor()
+        except sqlite3.Error as error:
+            print("Error while connecting to sqlite", error)
+        
+        print(user)
+        try:
+            # Add title, description and date into workout table
+            cursor.execute(
+                "INSERT INTO workouts (id, title, workoutDescription, date) VALUES (?, ?, ?, ?)", (user, title, description, date)
+            )
+            con.commit()
+            
+        except Exception as e:
+            print("Error: ", e)    
+        
+        return redirect("/calendar")
+        
+    else:
+        return render_template("calendar.html")
