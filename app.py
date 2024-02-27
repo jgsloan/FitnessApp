@@ -189,10 +189,11 @@ def calendar():
     # Populate array with workouts from workouts table in MF database.
     while row:
         events_dict = {
-                'title' : row[1],
-                'start' : row[3],
+                'id' : row[0],
+                'title' : row[2],
+                'start' : row[4],
                 'extendedProps' : {
-                    'description' : row[2]
+                    'description' : row[3]
                 }
             }
         events.append(events_dict)
@@ -242,3 +243,32 @@ def add():
         
     else:
         return render_template("calendar.html")
+    
+
+@app.route("/deleteWorkout", methods=["POST"])
+@login_required
+def deleteWorkout():
+    
+    if request.method == "POST":
+        
+        eventID = request.form.get("eventID")
+        eventTitle = request.form.get("eventTitle")
+        print(eventID)
+        print(eventTitle)
+     
+        try:
+            con = sqlite3.connect('moveforward.db')
+            cursor = con.cursor()
+        
+            cursor.execute(
+                "DELETE FROM workouts WHERE eventID = ?", (eventID,)
+            )
+            con.commit()        
+        
+        except sqlite3.Error as error:
+            print("Error while connecting to sqlite", error)
+    
+        return redirect("/calendar")
+        
+    else:
+        return redirect("/calendar")

@@ -29,6 +29,7 @@
         events: [
         {% for event in events %}
         {
+          id : '{{event.id}}',
           title: '{{event.title}}',
           start: '{{event.start}}',
           description: '{{event.extendedProps.description}}'   
@@ -44,8 +45,19 @@
         },
 
         eventClick: function(info){
-          alert('Workout: ' + info.event.title + '\n' + 'Description: ' + info.event.extendedProps.description);
+          $("#eventPopup").modal("show")
+          var eventID = info.event.id;
+          var eventTitle = info.event.title;
+          var eventDescription = info.event.extendedProps.description;
+          var eventDate = info.event.start;
+          $("#eventID").text(eventID);
+          $("#eventTitle").text(eventTitle);
+          $("#eventDescription").text(eventDescription);
+          $("#eventDate").text(eventDate);
+          
         }
+
+        
 
     });
       calendar.render();
@@ -94,6 +106,47 @@
   </div>
 </div>
 </div>
+
+<div class="container mt-5">
+  <div class="modal fade" id="eventPopup" tabindex="-1"> 
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content mx-4 my-4">
+        <div class="modal-header" style="background-color: blue; color: white;">
+            <h5 class="modal-title"><strong>Workout Details</strong></h5>
+            <button class="btn-close" data-bs-dismiss='modal'></button>
+        </div>
+        <div class="body mx-3 my-3">
+          <form action="deleteWorkout" method="post">
+            <div class="mb-3">
+              <label for="" class="form-label"><strong>Workout Title</strong></label>
+              <div id="eventTitle">
+                <p>{{eventTitle}}</p>
+                <input type="hidden" name="eventTitle" value="{{ eventTitle }}">
+                <input type="hidden" name="eventID" value="{{ eventID }}">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="" class="form-label"><strong>Workout Description</strong></label>
+              <div id="eventDescription" name="eventDescription">
+                <p>{{eventDescription}}</p>
+                <input type="hidden" name="eventDescription" value="{{ eventDescription }}">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label"><strong>Workout Date</strong></label>
+              <div id="eventDate" name="eventDate">
+                <p>{{eventDate}}</p>
+                <input type="hidden" name="eventDate" value="{{ eventDate }}">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary mb-3">Delete</button>
+            <button type="submit" class="btn btn-primary mb-3">Edit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
 
 {% endblock %}
 
