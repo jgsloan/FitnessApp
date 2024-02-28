@@ -24,32 +24,32 @@
                     <hr>
                     <ul class="nav nav-pills flex-column mb-auto">
                       <li class="nav-item"> 
-                        <a href="/" class="nav-link active" aria-current="page">
+                        <a href="/" class="nav-link text-white {% block navbar_class_home %}{% endblock %}" aria-current="page">
                           <svg class="bi me-2" width="16" height="16"><use xlink:href="/"/></svg>
                           Home
                         </a>
                       </li>
                       <li>
-                        <a href="/calendar" class="nav-link text-white">
+                        <a href="/calendar" class="nav-link text-white {% block navbar_class_calendar %}{% endblock %}">
                           <svg class="bi me-2" width="16" height="16"><use xlink:href="/calendar"/></svg>
                           Calendar
                         </a>
                       </li>
                       <li>
-                        <a href="#" class="nav-link text-white">
-                          <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"/></svg>
+                        <a href="/library" class="nav-link text-white {% block navbar_class_library %}{% endblock %}">
+                          <svg class="bi me-2" width="16" height="16"><use xlink:href="/library"/></svg>
                           Library
                         </a>
                       </li>
                       <li>
-                        <a href="#" class="nav-link text-white">
-                          <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+                        <a href="/feed" class="nav-link text-white {% block navbar_class_feed %}{% endblock %}">
+                          <svg class="bi me-2" width="16" height="16"><use xlink:href="/feed"/></svg>
                           Feed
                         </a>
                       </li>
                       <li>
-                        <a href="#" class="nav-link text-white">
-                          <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
+                        <a href="/community" class="nav-link text-white {% block navbar_class_community %}{% endblock %}">
+                          <svg class="bi me-2" width="16" height="16"><use xlink:href="/community"/></svg>
                           Community
                         </a>
                       </li>
@@ -61,7 +61,7 @@
                         <strong>mdo</strong>
                       </a>
                       <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/logout">Sign out</a></li>
                     </ul>

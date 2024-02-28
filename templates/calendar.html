@@ -1,15 +1,21 @@
 {% extends "layout.html" %}
 
+{% block navbar_class_calendar %} active {% endblock%}
+
 {% block head %}
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+
 <script>
   
     document.addEventListener('DOMContentLoaded', function() {
       const calendarEl = document.getElementById('calendar')
       const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
+
+        editable: true,
 
         customButtons: {
           myCustomButton: {
@@ -39,6 +45,7 @@
  
         eventMouseEnter: function(info){
           $(info.el).tooltip({
+          cursor: "pointer",
           title: 'Workout: ' + info.event.title + '\n' + 'Description: ' + info.event.extendedProps.description,
           placement: 'bottom'
           });
@@ -46,18 +53,16 @@
 
         eventClick: function(info){
           $("#eventPopup").modal("show")
-          var eventID = info.event.id;
+          var workoutID = info.event.id;
           var eventTitle = info.event.title;
           var eventDescription = info.event.extendedProps.description;
           var eventDate = info.event.start;
-          $("#eventID").text(eventID);
+          $("#workoutID").val(workoutID);
           $("#eventTitle").text(eventTitle);
           $("#eventDescription").text(eventDescription);
           $("#eventDate").text(eventDate);
           
-        }
-
-        
+        }        
 
     });
       calendar.render();
@@ -73,7 +78,7 @@
 
 {% block main %}
 
-<div class="container">
+<div class="container mt-5">
     <div id="calendar"></div>  
 </div>
 
@@ -116,37 +121,37 @@
             <button class="btn-close" data-bs-dismiss='modal'></button>
         </div>
         <div class="body mx-3 my-3">
-          <form action="deleteWorkout" method="post">
             <div class="mb-3">
-              <label for="" class="form-label"><strong>Workout Title</strong></label>
-              <div id="eventTitle">
-                <p>{{eventTitle}}</p>
-                <input type="hidden" name="eventTitle" value="{{ eventTitle }}">
-                <input type="hidden" name="eventID" value="{{ eventID }}">
-              </div>
-            </div>
+                <label for="" class="form-label"><strong>Workout Title</strong></label>
+                  <div id="eventTitle">
+                    <p>{{eventTitle}}</p>
+                  </div>
+            </div>    
+
             <div class="mb-3">
-              <label for="" class="form-label"><strong>Workout Description</strong></label>
-              <div id="eventDescription" name="eventDescription">
-                <p>{{eventDescription}}</p>
-                <input type="hidden" name="eventDescription" value="{{ eventDescription }}">
-              </div>
+                <label for="" class="form-label"><strong>Workout Description</strong></label>
+                  <div id="eventDescription" name="eventDescription">
+                    <p>{{eventDescription}}</p>
+                  </div>
             </div>
+
             <div class="mb-3">
               <label class="form-label"><strong>Workout Date</strong></label>
-              <div id="eventDate" name="eventDate">
-                <p>{{eventDate}}</p>
-                <input type="hidden" name="eventDate" value="{{ eventDate }}">
-              </div>
+                <div id="eventDate" name="eventDate">
+                  <p>{{eventDate}}</p>
+                </div> 
             </div>
-            <button type="submit" class="btn btn-primary mb-3">Delete</button>
-            <button type="submit" class="btn btn-primary mb-3">Edit</button>
-          </form>
+            <form action="deleteWorkout" method="post">
+            <input type="hidden" id="workoutID" name="workoutID" value="{{ workoutID }}"> 
+            <button type="submit" class="btn btn-primary mb-3" style="background-color: red; color: white; border-color: black;"">Delete</button> 
+            </form>       
+          </div>
         </div>
       </div>
     </div>
   </div>
-  </div>
+
+ 
 
 {% endblock %}
 

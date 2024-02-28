@@ -239,6 +239,10 @@ def add():
         except Exception as e:
             print("Error: ", e)    
         
+        # close database connection
+        con.close()
+        
+        # redirect to the calendar page to reload events
         return redirect("/calendar")
         
     else:
@@ -251,24 +255,77 @@ def deleteWorkout():
     
     if request.method == "POST":
         
-        eventID = request.form.get("eventID")
-        eventTitle = request.form.get("eventTitle")
-        print(eventID)
-        print(eventTitle)
-     
+        # Get id from hidden form in calendar HTML 
+        id = request.form.get('workoutID')
+    
+        # Connect to database
         try:
             con = sqlite3.connect('moveforward.db')
             cursor = con.cursor()
-        
+
+            # delete event from database using id to identify correct workout to delete
             cursor.execute(
-                "DELETE FROM workouts WHERE eventID = ?", (eventID,)
+                "DELETE FROM workouts WHERE eventID = ?", (id,)
             )
             con.commit()        
         
         except sqlite3.Error as error:
             print("Error while connecting to sqlite", error)
     
+
+        # close database connection
+        con.close()
+
+        # redirect to the calendar page
         return redirect("/calendar")
         
-    else:
+    else: 
         return redirect("/calendar")
+
+# TODO: make calendar events editable    
+@app.route("/editWorkout", methods =["POST"])
+@login_required
+def editWorkout():
+    return redirect("/calendar")
+
+
+@app.route("/library", methods=["GET", "POST"])
+@login_required
+def library():
+    return render_template("library.html")
+
+@app.route("/exercises", methods=["GET", "POST"])
+@login_required
+def exercises():
+    # TODO: Create an exercises library
+    return render_template("exercises.html")
+
+@app.route("/workouts", methods=["GET", "POST"])
+@login_required
+def workouts():
+    # TODO: Create a workouts library
+    return render_template("workouts.html")
+
+@app.route("/favourites", methods=["GET", "POST"])
+@login_required
+def favourites():
+    # TODO: Create a favourites library
+    return render_template("favourites.html")
+
+@app.route("/feed", methods=["GET", "POST"])
+@login_required
+def feed():
+    # TODO: Create a coaches feed
+    return render_template("feed.html")
+
+@app.route("/community", methods=["GET", "POST"])
+@login_required
+def community():
+    # TODO: Create a commmunity center/feed 
+    return render_template("community.html")
+
+@app.route("/profile", methods=["GET", "POST"])
+@login_required
+def profile():
+    # TODO: Create a profile screen for adminy things
+    return render_template("profile.html")
