@@ -179,7 +179,7 @@ def calendar():
 
     # Read database
     cursor.execute(
-        "SELECT * FROM workouts WHERE id = ?", (user,)
+        "SELECT * FROM workouts WHERE id = ?", (user)
     )
     row = cursor.fetchone()
 
@@ -208,6 +208,10 @@ def add():
     
     error = None
     user = session["user_id"]
+    
+    # Check if 'user' is a tuple and unpack it if necessary
+    if isinstance(user, tuple):
+        user = user[0]  # Unpack the first element
     
     # Check if form submitted via post
     if request.method == 'POST':
