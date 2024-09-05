@@ -31,7 +31,30 @@ def after_request(response):
 @login_required
 def index():
     """Welcome Screen"""
-    return render_template("index.html", events=events) 
+    
+    # store user id
+    user = session["user_id"]
+    
+    # Connect to database
+    try:
+            sqliteConnection = sqlite3.connect('moveforward.db')
+            cursor = sqliteConnection.cursor()
+    except sqlite3.Error as error:
+            print("Error while connecting to sqlite", error)
+            
+            # Fetch Add username to a variable
+    cursor.execute(
+            "SELECT username FROM users WHERE id = ?", (user)
+        )   
+    result = cursor.fetchone()
+    
+    # Unpack the username from the tuple if the result is not None
+    if result:
+        username = result[0]
+    else:
+        username = "Guest"  # or handle the case where the user is not found
+    
+    return render_template("index.html", events=events, username=username) 
 
 
 @app.route("/login", methods=["GET", "POST"])
