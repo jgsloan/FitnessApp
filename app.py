@@ -44,7 +44,7 @@ def index():
             
             # Fetch Add username to a variable
     cursor.execute(
-            "SELECT username FROM users WHERE id = ?", (user)
+            "SELECT username FROM users WHERE id = ?", (user,)
         )   
     result = cursor.fetchone()
     
@@ -201,8 +201,9 @@ def calendar():
             print("Error while connecting to sqlite", error)
 
     # Read database
+    print(user)
     cursor.execute(
-        "SELECT * FROM workouts WHERE id = ?", (user)
+        "SELECT * FROM workouts WHERE id = ?", (user,)
     )
     row = cursor.fetchone()
 
@@ -212,7 +213,7 @@ def calendar():
     # Populate array with workouts from workouts table in MF database.
     while row:
         events_dict = {
-                'id' : row[0],
+                'id' : row[1],
                 'title' : row[2],
                 'start' : row[4],
                 'extendedProps' : {
