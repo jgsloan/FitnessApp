@@ -4,6 +4,35 @@
 
 {% block title %} Exercises {% endblock %}
 
+<head>
+  <!-- Include Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Include jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Include Bootstrap JS (with Popper.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</head>
+
+
+<script>
+
+  function autoPlayYouTubeModal() {
+    var triggerOpen = $("body").find('[data-tagVideo]');
+    triggerOpen.click(function() {
+      var theModal = $(this).data("bs-target"),
+      videoSRC = $(this).attr("data-tagVideo"),
+      videoSRCauto = videoSRC + "?autoplay=1&mute=1";
+    $(theModal + ' iframe').attr('src', videoSRCauto);
+    $(theModal + ' button.btn-close').click(function() {
+      $(theModal + ' iframe').attr('src', videoSRC);
+    });
+    });
+  }
+</script>
+
 {% block main %}
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -50,7 +79,7 @@
   <div class="container text-center">
     <div class="row">
       <div class="col">
-        <img src="/static/Assets/air-squat-768x432.jpeg" class="img-fluid img-thumbnail" alt="Air Squat">
+        <img src="/static/Assets/air-squat-768x432.jpeg" class="img-fluid img-thumbnail" alt="Air Squat" data-tagVideo="https://www.youtube.com/embed/rMvwVtlqjTE" data-bs-toggle="modal" data-bs-target="#modal1">
         <p></p>
         <h5 class="text-start">The Air Squat</h5>
       </div>
@@ -134,7 +163,28 @@
 </div>
 </main>
 
+<!-- Modals-->
+ <div class="modal fade" id="modal1" tabindex="-1" aria-labelledby="modal1label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div class="ratio ratio-16x9">
+            <iframe src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
 
+<script>
+  $(document).ready(function() {
+    autoPlayYouTubeModal();
+  });
+</script>
 
   
 {% endblock %}
