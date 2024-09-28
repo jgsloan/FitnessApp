@@ -4,36 +4,33 @@
 
 {% block title %} Exercises {% endblock %}
 
-<head>
-  <!-- Include Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Include jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <!-- Include Bootstrap JS (with Popper.js) -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-</head>
+{% block main %}
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 
   function autoPlayYouTubeModal() {
-    var triggerOpen = $("body").find('[data-tagVideo]');
+    var triggerOpen = $("main").find('[data-tagVideo]');
     triggerOpen.click(function() {
       var theModal = $(this).data("bs-target"),
       videoSRC = $(this).attr("data-tagVideo"),
-      videoSRCauto = videoSRC + "?autoplay=1&mute=1";
+      videoSRCauto = videoSRC + "?autoplay=1"; 
+
+      // Set the src attribute for the iframe inside the modal
+      console.log("Setting iframe src to:", videoSRCauto); // Log for debugging
+
     $(theModal + ' iframe').attr('src', videoSRCauto);
     $(theModal + ' button.btn-close').click(function() {
       $(theModal + ' iframe').attr('src', videoSRC);
     });
     });
   }
-</script>
+</script> 
 
-{% block main %}
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -79,12 +76,12 @@
   <div class="container text-center">
     <div class="row">
       <div class="col">
-        <img src="/static/Assets/air-squat-768x432.jpeg" class="img-fluid img-thumbnail" alt="Air Squat" data-tagVideo="https://www.youtube.com/embed/rMvwVtlqjTE" data-bs-toggle="modal" data-bs-target="#modal1">
+        <img src="/static/Assets/air-squat-768x432.jpeg" class="img-fluid img-thumbnail" alt="Air Squat" data-tagVideo="https://www.youtube.com/embed/rMvwVtlqjTE?si=CrBdXFOQyuictKb8" data-bs-toggle="modal" data-bs-target="#modal1">
         <p></p>
         <h5 class="text-start">The Air Squat</h5>
       </div>
       <div class="col">
-        <img src="/static/Assets/front-squat-768x432.jpeg" class="img-fluid img-thumbnail" alt="Front Squat">
+        <img src="/static/Assets/front-squat-768x432.jpeg" class="img-fluid img-thumbnail" alt="Front Squat" data-tagVideo="https://www.youtube.com/embed/uYumuL_G_V0?si=5vn6n6mL1KdooNLA" data-bs-toggle="modal" data-bs-target="#modal1">
         <p></p>
         <h5 class="text-start">The Front Squat</h5>
       </div>
@@ -171,9 +168,9 @@
           <h5 class="modal-title"></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body p-0">
+        <div class="modal-body">
           <div class="ratio ratio-16x9">
-            <iframe src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <iframe src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
         </div>
       </div>
