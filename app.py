@@ -324,8 +324,52 @@ def exercises():
 @app.route("/workouts", methods=["GET", "POST"])
 @login_required
 def workouts():
-    # TODO: Create a workouts library
-    return render_template("workouts.html")
+    
+        # Connect to database
+        try:
+            con = sqlite3.connect('moveforward.db')
+            cursor = con.cursor()
+        except sqlite3.Error as error:
+            print("Error while connecting to sqlite", error)
+
+        # Store hero_wod table into array
+        try:
+            cursor.execute("SELECT * FROM hero_wods")
+            rows = cursor.fetchall()  # Fetch all rows
+        
+
+        # Get column names only after executing the query
+            column_names = [description[0] for description in cursor.description]
+            print("Column names:", column_names)
+
+        # Convert rows to a list of dictionaries
+            hero_wods = [dict(zip(column_names, row)) for row in rows]
+            print("Hero WODs:", hero_wods)
+
+        except Exception as e:
+            print("Error fetching data:", e)
+            return "Error fetching data"
+
+        con.commit()
+
+        con.close()
+
+        # Add ID to array
+        wodID = []
+        for i in hero_wods:
+            wodID.append(i["wodID"])
+
+        # Add name to array 
+        wodName = []
+        for i in hero_wods:
+            wodName.append(i["name"])
+
+        # Add description to array
+        wodDescription = []
+        for i in hero_wods:
+            wodDescription.append(i["description"])
+
+        return render_template("workouts.html", wodID=wodID, wodName=wodName, wodDescription=wodDescription)
 
 @app.route("/favourites", methods=["GET", "POST"])
 @login_required

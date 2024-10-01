@@ -17,7 +17,7 @@
             <a class="nav-link" href="/exercises">Movements</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-bold" href="/workouts">Workouts</a>
+            <a class="nav-link fw-bold" href="/workouts">Hero Wods</a>
           </li>
           <li class="nav-item me-5">
             <a class="nav-link" href="/favourites">Favourites</a>
@@ -34,10 +34,25 @@
   <main class="col-md-12 ms-sm-auto col-lg-12 px-md-3">
     <div class="content">
 
-      <h3 class="mt-5">TODO: WORKOUTS LIBRARY WILL BE SHOWN HERE</h3>
+      <p></p>
+      <p>Since 2005, CrossFit has posted workouts meant to honor the memories of CrossFit service members who made the ultimate sacrifice and exemplary members of the CrossFit community who are no longer with us. <em>See below for the full list of CrossFit Hero and Tribute Workouts, published in chronological order.</em>.</p>
 
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="text-start" scope="col">Name</th>
+            <th class="text-start" scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for i in range(wodID|length) %}
+        <tr>
+          <td class="text-start">{{ wodName[i] }}</td>
+          <td class="text-start">{{ wodDescription[i] }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
     </div>
 </main>
-
-
 {% endblock %}
