@@ -316,16 +316,9 @@ def deleteWorkout():
 def editWorkout():
     return redirect("/calendar")
 
-
-@app.route("/library", methods=["GET", "POST"])
-@login_required
-def library():
-    return render_template("library.html")
-
 @app.route("/exercises", methods=["GET", "POST"])
 @login_required
 def exercises():
-    # TODO: Create an exercises library
     return render_template("exercises.html")
 
 @app.route("/workouts", methods=["GET", "POST"])
@@ -339,18 +332,6 @@ def workouts():
 def favourites():
     # TODO: Create a favourites library
     return render_template("favourites.html")
-
-@app.route("/feed", methods=["GET", "POST"])
-@login_required
-def feed():
-    # TODO: Create a coaches feed
-    return render_template("feed.html")
-
-@app.route("/community", methods=["GET", "POST"])
-@login_required
-def community():
-    # TODO: Create a commmunity center/feed 
-    return render_template("community.html")
 
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
