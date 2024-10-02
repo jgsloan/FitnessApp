@@ -324,52 +324,54 @@ def exercises():
 @app.route("/workouts", methods=["GET", "POST"])
 @login_required
 def workouts():
-    
-        # Connect to database
-        try:
-            con = sqlite3.connect('moveforward.db')
-            cursor = con.cursor()
-        except sqlite3.Error as error:
-            print("Error while connecting to sqlite", error)
+        
+    # Connect to database
+    try:
+        con = sqlite3.connect('moveforward.db')
+        cursor = con.cursor()
+
+        if request.method =='POST':
+
+        # Store name and description into variabkes
+            name = request.form.get("name")
+            description = request.form.get("description")
+
+        # Store in hero_wods database
+            cursor.execute(
+                "INSERT INTO hero_wods (name, description) VALUES (?,?)", (name, description)
+            )
+            con.commit()
 
         # Store hero_wod table into array
-        try:
-            cursor.execute("SELECT * FROM hero_wods")
-            rows = cursor.fetchall()  # Fetch all rows
+        cursor.execute("SELECT * FROM hero_wods")
+        rows = cursor.fetchall()  # Fetch all rows
         
-
         # Get column names only after executing the query
-            column_names = [description[0] for description in cursor.description]
-            print("Column names:", column_names)
+        column_names = [description[0] for description in cursor.description]
 
         # Convert rows to a list of dictionaries
-            hero_wods = [dict(zip(column_names, row)) for row in rows]
-            print("Hero WODs:", hero_wods)
+        hero_wods = [dict(zip(column_names, row)) for row in rows]
+    
+    except sqlite3.Error as error:
+        print("Error while connecting to sqlite", error)
+        return("Database Error")
 
-        except Exception as e:
-            print("Error fetching data:", e)
-            return "Error fetching data"
+    # Add ID to array
+    wodID = []
+    for i in hero_wods:
+        wodID.append(i["wodID"])
 
-        con.commit()
+    # Add name to array 
+    wodName = []
+    for i in hero_wods:
+        wodName.append(i["name"])
 
-        con.close()
+    # Add description to array
+    wodDescription = []
+    for i in hero_wods:
+        wodDescription.append(i["description"])
 
-        # Add ID to array
-        wodID = []
-        for i in hero_wods:
-            wodID.append(i["wodID"])
-
-        # Add name to array 
-        wodName = []
-        for i in hero_wods:
-            wodName.append(i["name"])
-
-        # Add description to array
-        wodDescription = []
-        for i in hero_wods:
-            wodDescription.append(i["description"])
-
-        return render_template("workouts.html", wodID=wodID, wodName=wodName, wodDescription=wodDescription)
+    return render_template("workouts.html", wodID=wodID, wodName=wodName, wodDescription=wodDescription)
 
 @app.route("/favourites", methods=["GET", "POST"])
 @login_required
