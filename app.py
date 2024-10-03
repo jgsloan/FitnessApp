@@ -384,3 +384,18 @@ def favourites():
 def profile():
     # TODO: Create a profile screen for adminy things
     return render_template("profile.html")
+
+@app.route("/favourite", methods=["GET","POST"])
+@login_required
+def favourite():
+
+    if request.method == "POST":
+
+        # Retrieve checkbox values
+        is_favorite = 'favourite' in request.form  # Will be True if the checkbox is checked
+        if is_favorite:
+            print("Checkbox is checked!")
+        else:
+            print("Checkbox is unchecked!")
+        
+       
