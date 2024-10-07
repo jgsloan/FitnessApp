@@ -398,4 +398,45 @@ def favourite():
         else:
             print("Checkbox is unchecked!")
         
-       
+@app.route("/barbells", methods=["GET","POST"]) 
+@login_required
+def barbells(): 
+
+    # Get current user
+    user = session["user_id"]
+
+    if request.method == "POST":
+
+         # store values in variables
+
+        deadlift1RM = request.form.get("1rep_max_deadlift")
+        print(deadlift1RM)
+        clean1RM = request.form.get("1rep_max_clean")
+        print(clean1RM)
+        snatch1RM = request.form.get("1rep_max_snatch")
+        print(snatch1RM)
+        pushpress1RM = request.form.get("1rep_max_pushpress")
+        print(pushpress1RM)
+        pushjerk1RM = request.form.get("1rep_max_pushjerk")
+        print(pushjerk1RM)
+        squatCandJ = request.form.get("1rep_max_squat_clean_and_jerk")
+        print(squatCandJ)
+
+    # Connect to database
+        try:
+            con = sqlite3.connect('moveforward.db')
+            cursor = con.cursor()
+
+            # Add data to database
+            cursor.execute("SELECT EXISTS(SELECT 1 FROM barbell_PRs WHERE weight IS NOT NULL LIMIT 1)")
+            data_exists = cursor.fetchone() # is not none
+
+            if data_exists:
+                cursor.execute("UPDATE barbell_PRs SET weight = ")
+
+        except sqlite3.Error as error:
+            print("Error while connecting to sqlite", error)
+            return("Database Error")
+      
+    return render_template("/profile")
+

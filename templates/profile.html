@@ -31,25 +31,36 @@
       <input class="button mt-5" name="weight" placeholder="Weight (kg)"></input>
       <button type="submit">Update</button>
 
-      <h5 class="mt-5">Barbell PRs</h5>
-
+    <table class="table">
+      <tablehead> <h5 class="mt-5">Barbell PRs</h5></tablehead>
       <form action="barbells" method="POST">
-      
-      Deadlift 1RM<input class="button ms-2 mt-1" name="1rep_max_deadlift" placeholder="Deadlift 1RM"></input>
-      <br>
-      Clean 1RM<input class="button ms-2 mt-5" name="1rep_max_clean" placeholder="Clean 1RM"></input>
-      <br>
-      Snatch 1RM<input class="button ms-2 mt-5" name="1rep_max_snatch" placeholder="Snatch 1RM"></input>
-      <br>
-      Push Press 1RM<input class="button ms-2 mt-5" name="1rep_max_pushpress" placeholder="Push Press 1RM"></input>
-      <br>
-      Push Jerk 1RM<input class="button ms-2 mt-5" name="1rep_max_pushjerk" placeholder="Push Jerk 1RM"></input>
-      <br>
-      Squat Clean and Jerk 1RM<input class="button ms-2 mt-5" name="1rep_max_squat_clean_and_jerk" placeholder="Squat Clean and Jerk 1RM"></input>
-      <br>
-      <button class="mt-5" type="submit">Save</button>
-      </form>
-    
+        <tr>
+          <td class="text-start">Deadlift 1RM</td>
+          <td><input class="form control form-control-sm" type="number" step="0.25" name="1rep_max_deadlift" placeholder="Deadlift 1RM"> kg</input></td>
+        </tr>
+        <tr>
+          <td class="text-start">Clean 1RM</td>
+          <td><input class="form control form-control-sm" type="number" step="0.25" name="1rep_max_clean" placeholder="Clean 1RM"> kg</input></td>
+        </tr>
+        <tr>
+          <td class="text-start">Snatch 1RM</td>
+          <td><input class="form control form-control-sm" type="number" step="0.25" name="1rep_max_snatch" placeholder="Snatch 1RM"> kg</input></td>
+        </tr>
+        <tr>
+          <td class="text-start">Push Press 1RM</td>
+          <td><input class="form control form-control-sm" type="number" step="0.25" name="1rep_max_pushpress" placeholder="Push Press 1RM"> kg</input></td>
+        </tr>
+        <tr>
+          <td class="text-start">Push Jerk 1RM</td>
+          <td><input class="form control form-control-sm" type="number" step="0.25" name="1rep_max_pushjerk" placeholder="Push Jerk 1RM"> kg</input></td>
+        </tr>
+        <tr>
+          <td class="text-start">Squat Clean and Jerk 1RM</td>
+          <td><input class="form control form-control-sm" type="number" step="0.25" name="1rep_max_squat_clean_and_jerk" placeholder="Squat Clean and Jerk 1RM"> kg</input></td>
+        </tr>
+    </table>
+    <button class="mt-2" type="submit">Save</button>
+    </form>
 
     </div>
   </main>
