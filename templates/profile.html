@@ -17,6 +17,42 @@
       </div>
   </nav>
 
-  <h3 class="mt-5">TODO: CREATE A PROFILE SCREEN FOR ADMINY THINGS</h3>
+  <main class="col-md-12 ms-sm-auto col-lg-12 px-md-3">
+    <div class="content">
+
+      <h5 class="mt-5 text-center">Personal Details</h5>
+
+      <input class="button mt-5" name="age" placeholder="Age"></input>
+      <button type="submit">Update</button>
+      <br>
+      <input class="button mt-5" name="height" placeholder="Height (m)"></input>
+      <button type="submit">Update</button>
+      <br>
+      <input class="button mt-5" name="weight" placeholder="Weight (kg)"></input>
+      <button type="submit">Update</button>
+
+      <h5 class="mt-5">Barbell PRs</h5>
+
+      <form action="barbells" method="POST">
+      
+      Deadlift 1RM<input class="button ms-2 mt-1" name="1rep_max_deadlift" placeholder="Deadlift 1RM"></input>
+      <br>
+      Clean 1RM<input class="button ms-2 mt-5" name="1rep_max_clean" placeholder="Clean 1RM"></input>
+      <br>
+      Snatch 1RM<input class="button ms-2 mt-5" name="1rep_max_snatch" placeholder="Snatch 1RM"></input>
+      <br>
+      Push Press 1RM<input class="button ms-2 mt-5" name="1rep_max_pushpress" placeholder="Push Press 1RM"></input>
+      <br>
+      Push Jerk 1RM<input class="button ms-2 mt-5" name="1rep_max_pushjerk" placeholder="Push Jerk 1RM"></input>
+      <br>
+      Squat Clean and Jerk 1RM<input class="button ms-2 mt-5" name="1rep_max_squat_clean_and_jerk" placeholder="Squat Clean and Jerk 1RM"></input>
+      <br>
+      <button class="mt-5" type="submit">Save</button>
+      </form>
+    
+
+    </div>
+  </main>
+  
 
 {% endblock %}
