@@ -428,15 +428,14 @@ def barbells():
             cursor = con.cursor()
 
             # Add data to database
-            cursor.execute("SELECT EXISTS(SELECT 1 FROM barbell_PRs WHERE weight IS NOT NULL LIMIT 1)")
-            data_exists = cursor.fetchone() # is not none
-
-            if data_exists:
-                cursor.execute("UPDATE barbell_PRs SET weight = ")
+            cursor.execute(
+                "INSERT INTO bb_PRs (weight, user_id, bb_movement_id) VALUES (?,?,1)", (deadlift1RM, user)
+            )
+            con.commit()
 
         except sqlite3.Error as error:
             print("Error while connecting to sqlite", error)
             return("Database Error")
       
-    return render_template("/profile")
+    return render_template("profile.html", deadlift1RM=deadlift1RM)
 
