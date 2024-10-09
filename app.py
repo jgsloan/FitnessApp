@@ -7,6 +7,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required
 
+from functools import wraps
+
 # Configure application
 app = Flask(__name__)
 
@@ -379,12 +381,6 @@ def favourites():
     # TODO: Create a favourites library
     return render_template("favourites.html")
 
-@app.route("/profile", methods=["GET", "POST"])
-@login_required
-def profile():
-    # TODO: Create a profile screen for adminy things
-    return render_template("profile.html")
-
 @app.route("/favourite", methods=["GET","POST"])
 @login_required
 def favourite():
@@ -397,45 +393,87 @@ def favourite():
             print("Checkbox is checked!")
         else:
             print("Checkbox is unchecked!")
-        
-@app.route("/barbells", methods=["GET","POST"]) 
+
+
+# ChatGPT used to assist with fucntion of this route specifically how to check for data in table before writing to it
+@app.route("/profile", methods=["GET", "POST"])
 @login_required
 def barbells(): 
-
     # Get current user
     user = session["user_id"]
 
-    if request.method == "POST":
+    # Initialize variables to store current values
+    current_values = {
+        "Deadlift 1RM": None,
+        "Clean 1RM": None,
+        "Snatch 1RM": None,
+        "Push Press 1RM": None,
+        "Push Jerk 1RM": None,
+        "Squat Clean and Jerk 1RM": None,
+    }
 
-         # store values in variables
+    # Connect to the database
+    try:
+        con = sqlite3.connect('moveforward.db')
+        cursor = con.cursor()
 
-        deadlift1RM = request.form.get("1rep_max_deadlift")
-        print(deadlift1RM)
-        clean1RM = request.form.get("1rep_max_clean")
-        print(clean1RM)
-        snatch1RM = request.form.get("1rep_max_snatch")
-        print(snatch1RM)
-        pushpress1RM = request.form.get("1rep_max_pushpress")
-        print(pushpress1RM)
-        pushjerk1RM = request.form.get("1rep_max_pushjerk")
-        print(pushjerk1RM)
-        squatCandJ = request.form.get("1rep_max_squat_clean_and_jerk")
-        print(squatCandJ)
-
-    # Connect to database
-        try:
-            con = sqlite3.connect('moveforward.db')
-            cursor = con.cursor()
-
-            # Add data to database
+        # Fetch current values for all movements
+        for movement_name in current_values.keys():
             cursor.execute(
-                "INSERT INTO bb_PRs (weight, user_id, bb_movement_id) VALUES (?,?,1)", (deadlift1RM, user)
+                "SELECT one_rep_max FROM barbel_movement WHERE user_id = ? AND bb_movement_name = ?",
+                (user, movement_name)
             )
-            con.commit()
+            result = cursor.fetchone()
+            current_values[movement_name] = result[0] if result else None
 
-        except sqlite3.Error as error:
-            print("Error while connecting to sqlite", error)
-            return("Database Error")
-      
-    return render_template("profile.html", deadlift1RM=deadlift1RM)
+        if request.method == "POST":
+            # Retrieve form values
+            form_data = {
+                "Deadlift 1RM": request.form.get("1rep_max_deadlift"),
+                "Clean 1RM": request.form.get("1rep_max_clean"),
+                "Snatch 1RM": request.form.get("1rep_max_snatch"),
+                "Push Press 1RM": request.form.get("1rep_max_pushpress"),
+                "Push Jerk 1RM": request.form.get("1rep_max_pushjerk"),
+                "Squat Clean and Jerk 1RM": request.form.get("1rep_max_squat_clean_and_jerk"),
+            }
+
+            # Update or insert values in the database
+            for movement_name, one_rep_max in form_data.items():
+                if one_rep_max:
+                    # Check if an entry already exists for the user
+                    cursor.execute(
+                        "SELECT COUNT(*) FROM barbel_movement WHERE user_id = ? AND bb_movement_name = ?",
+                        (user, movement_name)
+                    )
+                    exists = cursor.fetchone()[0]
+
+                    if exists:
+                        # Update existing record
+                        cursor.execute(
+                            "UPDATE barbel_movement SET one_rep_max = ? WHERE user_id = ? AND bb_movement_name = ?",
+                            (one_rep_max, user, movement_name)
+                        )
+                    else:
+                        # Insert new record
+                        cursor.execute(
+                            "INSERT INTO barbel_movement (bb_movement_name, one_rep_max, user_id) "
+                            "VALUES (?, ?, ?)",
+                            (movement_name, one_rep_max, user)
+                        )
+                    con.commit()
+
+                    # Update current values dictionary with the new data
+                    current_values[movement_name] = one_rep_max
+
+    except sqlite3.Error as error:
+        print("Database error:", error)
+        return f"Database Error: {error}"
+    finally:
+        if con:
+            con.close()
+
+    # Render the profile page with the current values
+    return render_template("profile.html", current_values=current_values)
+
+
 
