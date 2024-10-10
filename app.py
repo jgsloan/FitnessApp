@@ -412,6 +412,10 @@ def barbells():
         "Squat Clean and Jerk 1RM": None,
     }
 
+    current_age = None
+    current_height = None
+    current_weight = None
+
     # Connect to the database
     try:
         con = sqlite3.connect('moveforward.db')
@@ -426,7 +430,17 @@ def barbells():
             result = cursor.fetchone()
             current_values[movement_name] = result[0] if result else None
 
+        # Fetch current age, height, and weight from the users table
+        cursor.execute(
+            "SELECT age, height, weight FROM users WHERE id = ?",
+            (user,)
+        )
+        user_data = cursor.fetchone()
+        if user_data:
+            current_age, current_height, current_weight = user_data
+
         if request.method == "POST":
+
             # Retrieve form values
             form_data = {
                 "Deadlift 1RM": request.form.get("1rep_max_deadlift"),
@@ -465,6 +479,25 @@ def barbells():
                     # Update current values dictionary with the new data
                     current_values[movement_name] = one_rep_max
 
+    
+            age = request.form.get("age")
+            print(age)
+            height = request.form.get("height")
+            weight = request.form.get("weight")
+    
+            cursor.execute(
+                "UPDATE users SET age = ?, height = ?, weight = ? WHERE id = ?",
+                (age, height, weight, user)
+            )
+            con.commit()
+                    
+            current_age = age
+            print(current_age)
+            current_height = height
+            print(current_height)
+            current_weight = weight
+            print(current_weight)
+
     except sqlite3.Error as error:
         print("Database error:", error)
         return f"Database Error: {error}"
@@ -473,7 +506,7 @@ def barbells():
             con.close()
 
     # Render the profile page with the current values
-    return render_template("profile.html", current_values=current_values)
+    return render_template("profile.html", current_values=current_values, current_age=current_age, current_height=current_height, current_weight=current_weight)
 
 
 
