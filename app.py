@@ -225,7 +225,15 @@ def calendar():
         events.append(events_dict)
         row = cursor.fetchone()
 
-    return render_template("calendar.html", events=events)
+    # Fetch username
+    cursor.execute(
+        "SELECT username from users where id = ?", (user,)
+    )
+    username = cursor.fetchone()
+
+    username = username[0]
+
+    return render_template("calendar.html", events=events, username=username)
 
 
 @app.route("/add", methods=["POST",])
@@ -492,11 +500,12 @@ def barbells():
             con.commit()
                     
             current_age = age
-            print(current_age)
             current_height = height
-            print(current_height)
             current_weight = weight
-            print(current_weight)
+
+        # Calculate BMI
+        bmi = float(current_weight) / (float(current_height) * float(current_height))
+        bmi = str(round(bmi,2))
 
     except sqlite3.Error as error:
         print("Database error:", error)
@@ -506,7 +515,7 @@ def barbells():
             con.close()
 
     # Render the profile page with the current values
-    return render_template("profile.html", current_values=current_values, current_age=current_age, current_height=current_height, current_weight=current_weight)
+    return render_template("profile.html", current_values=current_values, current_age=current_age, current_height=current_height, current_weight=current_weight, bmi=bmi)
 
 
 
