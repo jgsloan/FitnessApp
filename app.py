@@ -46,8 +46,9 @@ def index():
             
             # Fetch Add username to a variable
     cursor.execute(
-            "SELECT username FROM users WHERE id = ?", (user,)
+            "SELECT username FROM users WHERE id = ?", (user)
         )   
+    print(user)
     result = cursor.fetchone()
     
     # Unpack the username from the tuple if the result is not None
@@ -107,7 +108,7 @@ def login():
         con.close()
 
         # Redirect to home page
-        return render_template("index.html")
+        return render_template("calendar.html")
     
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -159,7 +160,7 @@ def register():
             error = 'Passwords do not match'
             return render_template("register.html", error=error)
 
-        # Store username and hased password
+        # Store username and hasHed password
         username = request.form.get("username")
         hashed_password = generate_password_hash(request.form.get("password"))    
 
@@ -173,7 +174,8 @@ def register():
         cursor.execute(
             "SELECT id FROM users WHERE username = ?", (username,)
         )   
-        id = cursor.fetchone()
+        id = cursor.fetchone()[0]
+        print(id)
 
         # Remember user
         session["user_id"] = id
@@ -182,7 +184,7 @@ def register():
         sqliteConnection.close()
 
         # Redirect user to homepage
-        return redirect("/")
+        return redirect("/calendar")
     
     else:  
         # Load registration page 
@@ -207,6 +209,7 @@ def calendar():
     cursor.execute(
         "SELECT * FROM workouts WHERE id = ?", (user,)
     )
+    print(user)
     row = cursor.fetchone()
 
     #empty array
@@ -428,6 +431,12 @@ def barbells():
     try:
         con = sqlite3.connect('moveforward.db')
         cursor = con.cursor()
+        
+        cursor.execute(
+                "UPDATE users SET age = 1, height = 1, weight = 1 WHERE id = ?",
+                (user,)
+            )
+        con.commit()
 
         # Fetch current values for all movements
         for movement_name in current_values.keys():
